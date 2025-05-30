@@ -1,0 +1,48 @@
+.navBar {
+  position: fixed;
+
+  top: 7.2rem;
+  opacity: 0;
+  width: 90%;
+  transform: translateY(-100%);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s;
+
+  border-radius: 0 0 0.8rem 0.8rem;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
+.overlayHidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.open {
+  z-index: 1000;
+  opacity: 1;
+
+  transform: translateY(0);
+
+  background-color: var(--light);
+  pointer-events: auto;
+}
+
+.navBarList {
+  display: flex;
+  flex-direction: row;
+  padding: 0.6rem 1.6rem 0.8rem 1.6rem;
+  column-gap: 1.6rem;
+}

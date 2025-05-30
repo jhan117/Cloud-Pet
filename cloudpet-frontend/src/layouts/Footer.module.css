@@ -1,0 +1,14 @@
+.footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.footer a {
+  display: inline;
+  text-decoration: underline;
+}
+
+.footer a:hover {
+  color: #426eff;
+}
