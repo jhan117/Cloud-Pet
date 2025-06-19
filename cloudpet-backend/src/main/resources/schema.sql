@@ -1,0 +1,38 @@
+DROP DATABASE IF EXISTS `care_db`;
+CREATE DATABASE IF NOT EXISTS `care_db`;
+USE `care_db`;
+
+CREATE TABLE repeat_strategy (
+    strategy_id INT PRIMARY KEY AUTO_INCREMENT,
+    type ENUM('DAY', 'WEEK', 'MONTH', 'YEAR') NOT NULL,
+    interval_value INT NOT NULL,
+    start_date DATE NOT NULL
+);
+
+CREATE TABLE repeat_week (
+    repeat_week_id INT PRIMARY KEY AUTO_INCREMENT,
+    strategy_id INT NOT NULL,
+    FOREIGN KEY (strategy_id) REFERENCES repeat_strategy(strategy_id) ON DELETE CASCADE
+);
+
+CREATE TABLE repeat_week_day (
+    repeat_week_day_id INT PRIMARY KEY AUTO_INCREMENT,
+    repeat_week_id INT NOT NULL,
+    day_of_week ENUM('MON','TUE','WED','THU','FRI','SAT','SUN'),
+    FOREIGN KEY (repeat_week_id) REFERENCES repeat_week(repeat_week_id) ON DELETE CASCADE
+);
+
+CREATE TABLE care_plan (
+    plan_id INT PRIMARY KEY AUTO_INCREMENT,
+    plan_name VARCHAR(50) NOT NULL,
+    strategy_id INT NOT NULL,
+    FOREIGN KEY (strategy_id) REFERENCES repeat_strategy(strategy_id) ON DELETE CASCADE
+);
+
+CREATE TABLE care_log (
+    log_id INT PRIMARY KEY AUTO_INCREMENT,
+    plan_id INT NOT NULL,
+    record_date DATE NOT NULL,
+    is_done BOOLEAN NOT NULL,
+    FOREIGN KEY (plan_id) REFERENCES care_plan(plan_id) ON DELETE CASCADE
+);
