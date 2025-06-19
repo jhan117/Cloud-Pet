@@ -1,3 +1,5 @@
+DROP DATABASE IF EXISTS `railway`;
+CREATE DATABASE IF NOT EXISTS `railway`;
 USE `railway`;
 
 CREATE TABLE repeat_strategy (
