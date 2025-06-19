@@ -1,4 +1,5 @@
-const BASE_URL = "http://localhost:8080/api";
+// const BASE_URL = "http://localhost:8080/api";
+const BASE_URL = process.env.REACT_APP_API_URLl;
 
 const requestAPI = async (url, options, errorMsg) => {
   try {
