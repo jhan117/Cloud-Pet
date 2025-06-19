@@ -3,7 +3,7 @@ const BASE_URL = process.env.REACT_APP_API_URL;
 
 const requestAPI = async (url, options, errorMsg) => {
   try {
-    const res = await fetch(BASE_URL + url, options);
+    const res = await fetch(BASE_URL + "/api" + url, options);
     if (!res.ok) throw new Error();
     return await res.json().catch(() => null);
   } catch {
