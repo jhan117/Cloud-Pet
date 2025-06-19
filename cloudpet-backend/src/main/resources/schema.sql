@@ -2,7 +2,7 @@ USE `railway`;
 
 CREATE TABLE repeat_strategy (
     strategy_id INT PRIMARY KEY AUTO_INCREMENT,
-    type ENUM('DAY', 'WEEK', 'MONTH', 'YEAR') NOT NULL,
+    type VARCHAR(10) NOT NULL CHECK (type IN ('DAY', 'WEEK', 'MONTH', 'YEAR')),
     interval_value INT NOT NULL,
     start_date DATE NOT NULL
 );
@@ -16,7 +16,7 @@ CREATE TABLE repeat_week (
 CREATE TABLE repeat_week_day (
     repeat_week_day_id INT PRIMARY KEY AUTO_INCREMENT,
     repeat_week_id INT NOT NULL,
-    day_of_week ENUM('MON','TUE','WED','THU','FRI','SAT','SUN'),
+    day_of_week VARCHAR(3) NOT NULL CHECK (day_of_week IN ('MON','TUE','WED','THU','FRI','SAT','SUN')),
     FOREIGN KEY (repeat_week_id) REFERENCES repeat_week(repeat_week_id) ON DELETE CASCADE
 );
 
