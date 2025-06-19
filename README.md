@@ -27,12 +27,30 @@
   - [설계] ER다이어그램 완성 (데이터베이스 과제 - 설계서)
   - [공통] 프로젝트 세팅
   - [Front] Header, Footer, NavBar 구현
+- 2025-06-07:
+  - [설계] Logical Design, Sequence Diagram, API 설계 (데이터베이스 과제 - 설계서 제출)
+  - [테스트 코드 작성] Java 코드로 유사 API 구현 후 테스트 데이터로 디버깅 (자바프로그래밍 과제3 제출)
+  - [Front] Care Plan 목록 컴포넌트 구현
+- 2025-06-16:
+  - [Front] Plans Page, Today Page 구현
+- 2025-06-17:
+  - [Back] DB에서 Care Plan 및 반복 주기 개선, Care Plan API 구현
+  - [Front] Plans Page 개선
+- 2025-06-18:
+  - [Back] DB에서 Care Plan 및 반복 주기 개선, Care Plan API 개선
+  - [Front] Plans Page 개선
+- 2025-06-19:
+  - [Back] DB에서 Care Log 구현, Today API 구현
+  - [Front] Plans Page 개선
+- 2025-06-20:
+  - [배포] netlify에 front 코드 deploy, railway에 back 코드 deploy(db도 같이)
+  - [1차 보고서] 최종 개발 결과와 과정을 정리한 보고서 작성 (자바프로그래밍 과제 4 제출)
 
 ## To-do
 
-- [ ] [Front] MainPage, PlansPage 구현
-- [ ] [Back] DB 구축, API 설계, Front 연동 확인
-- [ ] [배포] 서버에 배포하기
+- [x] [Front] MainPage, PlansPage 구현
+- [x] [Back] DB 구축, API 설계, Front 연동 확인
+- [x] [배포] 서버에 배포하기
 - [ ] [Front] History, Settings(다크모드) 구현
 - [ ] [Front] Desktop 디자인 추가
 - [ ] [Front] UX 개선
