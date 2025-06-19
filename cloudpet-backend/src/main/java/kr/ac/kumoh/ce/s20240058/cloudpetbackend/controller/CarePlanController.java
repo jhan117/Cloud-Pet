@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:3000", "https://cloudpet-frontend.netlify.app/"})
 @RequestMapping("/api/care-plans")
 public class CarePlanController {
     private final CarePlanService carePlanService;

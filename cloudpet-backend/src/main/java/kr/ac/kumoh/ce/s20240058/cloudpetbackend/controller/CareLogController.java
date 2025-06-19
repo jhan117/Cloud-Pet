@@ -1,7 +1,6 @@
 package kr.ac.kumoh.ce.s20240058.cloudpetbackend.controller;
 
 import kr.ac.kumoh.ce.s20240058.cloudpetbackend.domain.CareLog;
-import kr.ac.kumoh.ce.s20240058.cloudpetbackend.dto.CareLogDto;
 import kr.ac.kumoh.ce.s20240058.cloudpetbackend.service.CareLogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +9,7 @@ import java.time.LocalDate;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:3000", "https://cloudpet-frontend.netlify.app/"})
 @RequestMapping("/api/care-logs")
 public class CareLogController {
     private final CareLogService careLogService;
