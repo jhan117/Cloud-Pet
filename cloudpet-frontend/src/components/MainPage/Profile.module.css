@@ -1,0 +1,33 @@
+.pic {
+  object-fit: cover;
+  aspect-ratio: 1 / 1;
+  border-radius: 4rem;
+}
+
+.profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.2rem 4rem;
+
+  row-gap: 0.8rem;
+}
+
+.comment {
+  font-size: 1.6rem;
+  font-weight: 500;
+}
+
+.info {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+
+  margin: 0.8rem 0;
+}
+
+.info p {
+  font-size: 1.4rem;
+  font-weight: 600;
+}

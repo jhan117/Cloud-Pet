@@ -9,20 +9,16 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-
-  position: fixed;
-  top: 0;
   z-index: 1100;
+
+  position: relative;
 
   border-radius: 0 0 2rem 2rem;
 }
 
 .menuButton {
-  width: 3.2rem;
   background-color: transparent;
   border: none;
-
-  font-size: 2rem;
 
   z-index: 1100;
 }

@@ -1,0 +1,13 @@
+.today {
+  display: flex;
+  flex-direction: column;
+  padding: 1.6rem;
+
+  row-gap: 1.6rem;
+}
+
+.careCards {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.8rem;
+}

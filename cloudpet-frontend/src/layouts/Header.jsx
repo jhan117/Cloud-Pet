@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
-import classes from "./Header.module.css";
 import NavBar from "./NavBar";
+import { Link } from "react-router-dom";
+
+import classes from "./Header.module.css";
 
 const Header = () => {
   const [navBarOpen, setNavBarOpen] = useState(false);
@@ -14,7 +16,9 @@ const Header = () => {
           navBarOpen && classes.headerHighlighted
         }`}
       >
-        <h1>CloudPet</h1>
+        <Link to="/">
+          <h1>CloudPet</h1>
+        </Link>
         <button
           className={classes.menuButton}
           open={navBarOpen}

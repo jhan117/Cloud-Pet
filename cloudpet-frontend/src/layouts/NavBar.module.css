@@ -1,12 +1,12 @@
 .navBar {
-  position: fixed;
-
+  position: absolute;
   top: 7.2rem;
+  left: 50%;
   opacity: 0;
   width: 90%;
-  transform: translateY(-100%);
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s;
-
+  transform: translate(-50%, -120%);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: 0 0 0.8rem 0.8rem;
   pointer-events: none;
   z-index: 1000;
@@ -22,7 +22,8 @@
   z-index: 999;
 
   opacity: 1;
-  transition: opacity 0.3s;
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: auto;
 }
 
 .overlayHidden {
@@ -34,7 +35,7 @@
   z-index: 1000;
   opacity: 1;
 
-  transform: translateY(0);
+  transform: translate(-50%, 0);
 
   background-color: var(--light);
   pointer-events: auto;

@@ -1,0 +1,17 @@
+.con {
+  background-color: white;
+  width: 3rem;
+  height: 3rem;
+
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.selected {
+  background-color: var(--primary);
+}

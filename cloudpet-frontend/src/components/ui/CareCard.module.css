@@ -1,0 +1,27 @@
+.careCard {
+  border: 1px solid var(--dark);
+
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  column-gap: 1.2rem;
+
+  padding: 0.8rem 1rem;
+}
+
+.title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 1.2rem;
+}
+
+.completed {
+  text-decoration: line-through;
+  color: gray;
+}
+
+.plans {
+  cursor: pointer;
+}
