@@ -1,6 +1,4 @@
-DROP DATABASE IF EXISTS `care_db`;
-CREATE DATABASE IF NOT EXISTS `care_db`;
-USE `care_db`;
+USE `railway`;
 
 CREATE TABLE repeat_strategy (
     strategy_id INT PRIMARY KEY AUTO_INCREMENT,
