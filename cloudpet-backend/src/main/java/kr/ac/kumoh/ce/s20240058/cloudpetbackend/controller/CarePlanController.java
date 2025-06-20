@@ -24,11 +24,11 @@ public class CarePlanController {
         return carePlanService.getAllCarePlans();
     }
     @PostMapping
-    public CarePlan createCarePlan(@RequestBody CarePlanDto request) {
+    public CarePlanDto createCarePlan(@RequestBody CarePlanDto request) {
         return carePlanService.createCarePlan(request);
     }
     @PutMapping("/{planId}")
-    public CarePlan updateCarePlan(@PathVariable Long planId, @RequestBody CarePlanDto request) {
+    public CarePlanDto updateCarePlan(@PathVariable Long planId, @RequestBody CarePlanDto request) {
         return carePlanService.updateCarePlan(planId, request);
     }
     @DeleteMapping("/{planId}")

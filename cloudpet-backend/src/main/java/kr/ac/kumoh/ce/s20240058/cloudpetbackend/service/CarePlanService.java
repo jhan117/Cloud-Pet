@@ -6,9 +6,11 @@ import kr.ac.kumoh.ce.s20240058.cloudpetbackend.domain.CarePlan;
 import kr.ac.kumoh.ce.s20240058.cloudpetbackend.domain.RepeatStrategy;
 import kr.ac.kumoh.ce.s20240058.cloudpetbackend.domain.enums.RepeatType;
 import kr.ac.kumoh.ce.s20240058.cloudpetbackend.dto.CarePlanDto;
+import kr.ac.kumoh.ce.s20240058.cloudpetbackend.dto.RepeatStrategyDto;
 import kr.ac.kumoh.ce.s20240058.cloudpetbackend.dto.TodayDto;
 import kr.ac.kumoh.ce.s20240058.cloudpetbackend.repository.CareLogRepository;
 import kr.ac.kumoh.ce.s20240058.cloudpetbackend.repository.CarePlanRepository;
+import kr.ac.kumoh.ce.s20240058.cloudpetbackend.repository.RepeatStrategyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,38 +27,41 @@ public class CarePlanService {
     private final RepeatStrategyService repeatStrategyService;
     private final RepeatWeekService repeatWeekService;
     private final CareLogRepository careLogRepository;
+    private final RepeatStrategyRepository repeatStrategyRepository;
+
+    private CarePlanDto toDto(CarePlan carePlan) {
+        return CarePlanDto.builder()
+                .planId(carePlan.getPlanId())
+                .planName(carePlan.getPlanName())
+                .repeatStrategyDto(repeatStrategyService.getRepeatStrategy(carePlan.getRepeatStrategy()))
+                .build();
+    }
 
     // create
-    public CarePlan createCarePlan(CarePlanDto dto) {
-        RepeatStrategy repeatStrategy = repeatStrategyService.createRepeatStrategy(dto.getRepeatStrategyDto());
+    public CarePlanDto createCarePlan(CarePlanDto dto) {
+        RepeatStrategyDto repeatStrategyDto = repeatStrategyService.createRepeatStrategy(dto.getRepeatStrategyDto());
+        RepeatStrategy repeatStrategy = repeatStrategyRepository.getReferenceById(repeatStrategyDto.getStrategyId());
 
         if (RepeatType.WEEK == dto.getRepeatStrategyDto().getType()) {
             repeatWeekService.createRepeatWeek(dto.getRepeatStrategyDto().getRepeatWeek(), repeatStrategy);
         }
 
-        CarePlan carePlan = CarePlan.builder()
+        return toDto(carePlanRepository.save(CarePlan.builder()
                 .planName(dto.getPlanName())
                 .repeatStrategy(repeatStrategy)
-                .build();
-
-        return carePlanRepository.save(carePlan);
+                .build()));
     }
 
     // read
     public List<CarePlanDto> getAllCarePlans() {
         return carePlanRepository.findAll().stream()
-                .map(carePlan -> CarePlanDto.builder()
-                        .planId(carePlan.getPlanId())
-                        .planName(carePlan.getPlanName())
-                        .repeatStrategyDto(repeatStrategyService.getRepeatStrategy(carePlan.getRepeatStrategy()))
-                        .build())
+                .map(this::toDto)
                 .toList();
     }
 
     // update
-    public CarePlan updateCarePlan(Long planId, CarePlanDto dto) {
+    public CarePlanDto updateCarePlan(Long planId, CarePlanDto dto) {
         if (planId == null) return null;
-
         CarePlan carePlan = carePlanRepository.findById(planId)
                 .orElseThrow(() -> new EntityNotFoundException("CarePlan not found"));
 
@@ -64,7 +69,9 @@ public class CarePlanService {
         RepeatType beforeType = carePlan.getRepeatStrategy().getType();
         RepeatType afterType = dto.getRepeatStrategyDto().getType();
 
-        RepeatStrategy repeatStrategy = repeatStrategyService.updateRepeatStrategy(strategyId, dto.getRepeatStrategyDto());
+        repeatStrategyService.updateRepeatStrategy(strategyId, dto.getRepeatStrategyDto());
+        RepeatStrategy repeatStrategy = repeatStrategyRepository.findById(strategyId)
+                .orElseThrow(() -> new EntityNotFoundException("repeatStrategy not found"));
 
         if (beforeType == RepeatType.WEEK && afterType == RepeatType.WEEK) {
             repeatWeekService.updateRepeatWeek(strategyId, dto.getRepeatStrategyDto().getRepeatWeek());
@@ -73,10 +80,9 @@ public class CarePlanService {
         } else if (afterType == RepeatType.WEEK) {
             repeatWeekService.createRepeatWeek(dto.getRepeatStrategyDto().getRepeatWeek(), repeatStrategy);
         }
-
         carePlan.setPlanName(dto.getPlanName());
         carePlan.setRepeatStrategy(repeatStrategy);
-        return carePlanRepository.save(carePlan);
+        return toDto(carePlanRepository.save(carePlan));
     }
 
     // delete

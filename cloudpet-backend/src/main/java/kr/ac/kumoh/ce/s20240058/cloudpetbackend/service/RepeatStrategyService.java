@@ -19,21 +19,11 @@ public class RepeatStrategyService {
     private final RepeatStrategyRepository repeatStrategyRepository;
     private final RepeatWeekService repeatWeekService;
 
-    public RepeatStrategy createRepeatStrategy(RepeatStrategyDto dto) {
-        return repeatStrategyRepository.save(RepeatStrategy.builder()
-                .type(dto.getType())
-                .intervalValue(dto.getIntervalValue())
-                .startDate(LocalDate.now())
-                .build());
-    }
-
-    public RepeatStrategyDto getRepeatStrategy(RepeatStrategy entity) {
+    private RepeatStrategyDto toDto(RepeatStrategy entity) {
         RepeatWeekDto repeatWeekDto = null;
-        if (entity.getType() == RepeatType.WEEK)
-        {
+        if (entity.getType() == RepeatType.WEEK) {
             repeatWeekDto = repeatWeekService.getRepeatWeek(entity.getStrategyId());
         }
-
         return RepeatStrategyDto.builder()
                 .strategyId(entity.getStrategyId())
                 .type(entity.getType())
@@ -43,13 +33,25 @@ public class RepeatStrategyService {
                 .build();
     }
 
-    public RepeatStrategy updateRepeatStrategy(Long strategyId, RepeatStrategyDto dto) {
+    public RepeatStrategyDto createRepeatStrategy(RepeatStrategyDto dto) {
+        return toDto(repeatStrategyRepository.save(RepeatStrategy.builder()
+                .type(dto.getType())
+                .intervalValue(dto.getIntervalValue())
+                .startDate(LocalDate.now())
+                .build()));
+    }
+
+    public RepeatStrategyDto getRepeatStrategy(RepeatStrategy entity) {
+        return toDto(entity);
+    }
+
+    public RepeatStrategyDto updateRepeatStrategy(Long strategyId, RepeatStrategyDto dto) {
         RepeatStrategy strategy = repeatStrategyRepository.findById(strategyId)
                 .orElseThrow(() -> new EntityNotFoundException("RepeatStrategy not found"));
 
         strategy.setType(dto.getType());
         strategy.setIntervalValue(dto.getIntervalValue());
 
-        return repeatStrategyRepository.save(strategy);
+        return toDto(repeatStrategyRepository.save(strategy));
     }
 }
