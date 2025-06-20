@@ -26,6 +26,7 @@ const CareCard = ({ plan, isTodo = false, onEdit, completed, onCheck }) => {
             {plan.repeatStrategyDto.type === "WEEK" &&
               " on " + plan.repeatStrategyDto.repeatWeek.days.join(", ")}
           </p>
+          <p>Start at {plan.repeatStrategyDto.startDate}</p>
         </div>
       )}
     </Card>
