@@ -45,9 +45,8 @@ const FormModal = ({ mode, editPlan, showModal, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    let success = false;
     if (mode === "add") {
-      success = await addCarePlan({
+      await addCarePlan({
         planName,
         repeatStrategyDto: {
           type,
@@ -61,7 +60,7 @@ const FormModal = ({ mode, editPlan, showModal, onClose }) => {
         },
       });
     } else if (mode === "edit") {
-      success = await editCarePlan({
+      await editCarePlan({
         ...editPlan,
         planName,
         repeatStrategyDto: {
