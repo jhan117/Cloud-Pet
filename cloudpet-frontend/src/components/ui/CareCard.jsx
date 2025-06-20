@@ -13,9 +13,21 @@ const CareCard = ({ plan, isTodo = false, onEdit, completed, onCheck }) => {
     >
       {isTodo &&
         (completed ? (
-          <FontAwesomeIcon icon={checkIcon} onClick={onCheck} />
+          <FontAwesomeIcon
+            icon={checkIcon}
+            onClick={(e) => {
+              e.preventDefault();
+              onCheck();
+            }}
+          />
         ) : (
-          <FontAwesomeIcon icon={unCheckIcon} onClick={onCheck} />
+          <FontAwesomeIcon
+            icon={unCheckIcon}
+            onClick={(e) => {
+              e.preventDefault();
+              onCheck();
+            }}
+          />
         ))}
       <h3 className={`${completed && classes.completed}`}>{plan.planName}</h3>
       {plan && (

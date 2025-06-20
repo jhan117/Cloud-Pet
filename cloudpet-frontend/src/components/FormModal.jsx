@@ -6,6 +6,7 @@ import DayIcon from "./ui/DayIcon";
 
 import classes from "./FormModal.module.css";
 import { useCarePlan } from "../contexts/CarePlanContext";
+import { useToday } from "../contexts/TodayContext";
 
 const dayList = [
   { label: "S", value: "SUN" },
@@ -19,7 +20,8 @@ const dayList = [
 
 const FormModal = ({ mode, editPlan, showModal, onClose }) => {
   const navigate = useNavigate();
-  const { addCarePlan, updateCarePlan, deleteCarePlan } = useCarePlan();
+  const { addCarePlan, editCarePlan, removeCarePlan } = useCarePlan();
+  const { fetchTodayPlans } = useToday();
   const [planName, setPlanName] = useState(editPlan?.planName || "");
   const [repeatInterval, setRepeatInterval] = useState(
     editPlan?.repeatStrategyDto.intervalValue || 1
@@ -40,29 +42,12 @@ const FormModal = ({ mode, editPlan, showModal, onClose }) => {
     );
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const plan = {
-      ...editPlan,
-      planName,
-      repeatStrategyDto: {
-        ...editPlan?.repeatStrategyDto,
-        type,
-        intervalValue: repeatInterval,
-
-        repeatWeek:
-          type === "WEEK"
-            ? {
-                days: daysOfWeek,
-              }
-            : null,
-      },
-    };
 
     let success = false;
     if (mode === "add") {
-      success = addCarePlan({
+      success = await addCarePlan({
         planName,
         repeatStrategyDto: {
           type,
@@ -75,14 +60,28 @@ const FormModal = ({ mode, editPlan, showModal, onClose }) => {
               : null,
         },
       });
-    } else if (mode === "edit" && editPlan) {
-      success = updateCarePlan(plan);
+    } else if (mode === "edit") {
+      success = await editCarePlan({
+        ...editPlan,
+        planName,
+        repeatStrategyDto: {
+          ...editPlan?.repeatStrategyDto,
+          type,
+          intervalValue: repeatInterval,
+
+          repeatWeek:
+            type === "WEEK"
+              ? {
+                  days: daysOfWeek,
+                }
+              : null,
+        },
+      });
     }
 
-    if (success) {
-      onClose();
-      navigate("/plans", { replace: true });
-    }
+    await fetchTodayPlans();
+    onClose();
+    navigate("/plans", { replace: true });
   };
 
   return (
@@ -147,7 +146,7 @@ const FormModal = ({ mode, editPlan, showModal, onClose }) => {
       </div>
       <div className={classes.buttons}>
         {mode === "edit" && (
-          <button onClick={() => deleteCarePlan(editPlan.planId)}>
+          <button onClick={() => removeCarePlan(editPlan.planId)}>
             delete
           </button>
         )}

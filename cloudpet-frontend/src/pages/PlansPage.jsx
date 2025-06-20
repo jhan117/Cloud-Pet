@@ -47,7 +47,7 @@ const PlansPage = () => {
           <div className={classes.careCards}>
             {loading ? (
               <p>Loading...</p>
-            ) : (
+            ) : carePlans.length > 0 ? (
               carePlans.map((plan) => (
                 <CareCard
                   key={plan.planId}
@@ -55,6 +55,8 @@ const PlansPage = () => {
                   onEdit={() => openModal("edit", plan)}
                 />
               ))
+            ) : (
+              <p>오늘의 Care가 없습니다.</p>
             )}
           </div>
         </Card>

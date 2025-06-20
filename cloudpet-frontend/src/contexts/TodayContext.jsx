@@ -24,8 +24,11 @@ export const TodayProvider = ({ children }) => {
   }, [today]);
 
   const toggleComplete = async (planId) => {
-    await patchToggleCareLog(planId, today);
-    await fetchTodayPlans();
+    const data = await patchToggleCareLog(planId, today);
+    if (data)
+      setTodayPlans((prev) =>
+        prev.map((p) => (p.planId === data.planId ? data : p))
+      );
   };
 
   useEffect(() => {

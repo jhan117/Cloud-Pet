@@ -26,20 +26,23 @@ export const CarePlanProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
-  const addCarePlan = async (plan) => {
-    await createCarePlan(plan);
-    await fetchCarePlans();
-  };
+  const addCarePlan = useCallback(async (plan) => {
+    const data = await createCarePlan(plan);
+    if (data) setCarePlans((prev) => [...prev, data]);
+  }, []);
 
-  const editCarePlan = async (plan) => {
-    await updateCarePlan(plan);
-    await fetchCarePlans();
-  };
+  const editCarePlan = useCallback(async (plan) => {
+    const data = await updateCarePlan(plan);
+    if (data)
+      setCarePlans((prev) =>
+        prev.map((p) => (p.planId === data.planId ? data : p))
+      );
+  }, []);
 
-  const removeCarePlan = async (planId) => {
+  const removeCarePlan = useCallback(async (planId) => {
     await deleteCarePlan(planId);
-    await fetchCarePlans();
-  };
+    setCarePlans((prev) => prev.filter((p) => p.planId !== planId));
+  }, []);
 
   useEffect(() => {
     fetchCarePlans();
