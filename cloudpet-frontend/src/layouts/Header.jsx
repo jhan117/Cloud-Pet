@@ -16,9 +16,16 @@ const Header = () => {
           navBarOpen && classes.headerHighlighted
         }`}
       >
-        <Link to="/">
-          <h1>CloudPet</h1>
-        </Link>
+        <div className={classes.titleCon}>
+          <Link to="/">
+            <h1>CloudPet</h1>
+          </Link>
+          <p>
+            컴퓨터공학과
+            <br />
+            20240058 권기영
+          </p>
+        </div>
         <button
           className={classes.menuButton}
           open={navBarOpen}

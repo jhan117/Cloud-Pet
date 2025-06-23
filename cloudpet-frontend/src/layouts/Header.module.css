@@ -16,6 +16,17 @@
   border-radius: 0 0 2rem 2rem;
 }
 
+.titleCon {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 1.2rem;
+}
+
+.titleCon p {
+  font-size: 1.2rem;
+}
+
 .menuButton {
   background-color: transparent;
   border: none;
