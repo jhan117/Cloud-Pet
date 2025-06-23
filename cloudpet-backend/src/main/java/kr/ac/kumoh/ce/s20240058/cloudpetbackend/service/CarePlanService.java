@@ -1,14 +1,13 @@
 package kr.ac.kumoh.ce.s20240058.cloudpetbackend.service;
 
 import jakarta.persistence.EntityNotFoundException;
-import kr.ac.kumoh.ce.s20240058.cloudpetbackend.domain.CareLog;
 import kr.ac.kumoh.ce.s20240058.cloudpetbackend.domain.CarePlan;
 import kr.ac.kumoh.ce.s20240058.cloudpetbackend.domain.RepeatStrategy;
 import kr.ac.kumoh.ce.s20240058.cloudpetbackend.domain.enums.RepeatType;
 import kr.ac.kumoh.ce.s20240058.cloudpetbackend.dto.CarePlanDto;
 import kr.ac.kumoh.ce.s20240058.cloudpetbackend.dto.RepeatStrategyDto;
+import kr.ac.kumoh.ce.s20240058.cloudpetbackend.dto.RepeatWeekDto;
 import kr.ac.kumoh.ce.s20240058.cloudpetbackend.dto.TodayDto;
-import kr.ac.kumoh.ce.s20240058.cloudpetbackend.repository.CareLogRepository;
 import kr.ac.kumoh.ce.s20240058.cloudpetbackend.repository.CarePlanRepository;
 import kr.ac.kumoh.ce.s20240058.cloudpetbackend.repository.RepeatStrategyRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -26,7 +26,6 @@ public class CarePlanService {
     private final CarePlanRepository carePlanRepository;
     private final RepeatStrategyService repeatStrategyService;
     private final RepeatWeekService repeatWeekService;
-    private final CareLogRepository careLogRepository;
     private final RepeatStrategyRepository repeatStrategyRepository;
 
     private CarePlanDto toDto(CarePlan carePlan) {
@@ -54,9 +53,46 @@ public class CarePlanService {
 
     // read
     public List<CarePlanDto> getAllCarePlans() {
-        return carePlanRepository.findAll().stream()
-                .map(this::toDto)
-                .toList();
+        List<Object[]> rows = carePlanRepository.findAllCarePlansWithRepeatStrategy();
+        List<CarePlanDto> result = new ArrayList<>();
+
+        for (Object[] row : rows) {
+            Long planId = ((Number)row[0]).longValue();
+            String planName = (String) row[1];
+            Long strategyId = ((Number)row[2]).longValue();
+            String type = (String) row[3];
+            int intervalValue = ((Number)row[4]).intValue();
+            LocalDate startDate = ((java.sql.Date)row[5]).toLocalDate();
+            Long repeatWeekId = row[6] != null ? ((Number) row[6]).longValue() : null;
+
+            RepeatWeekDto repeatWeekDto = null;
+            if (repeatWeekId != null) {
+                String daysConcat = (String) row[7];
+                List<String> days = Arrays.asList(daysConcat.split(","));
+
+                repeatWeekDto = RepeatWeekDto.builder()
+                        .repeatWeekId(repeatWeekId)
+                        .days(days)
+                        .build();
+            }
+
+            RepeatStrategyDto repeatStrategyDto = RepeatStrategyDto.builder()
+                    .strategyId(strategyId)
+                    .type(RepeatType.valueOf(type))
+                    .intervalValue(intervalValue)
+                    .startDate(startDate)
+                    .repeatWeek(repeatWeekDto)
+                    .build();
+
+            CarePlanDto carePlanDto = CarePlanDto.builder()
+                    .planId(planId)
+                    .planName(planName)
+                    .repeatStrategyDto(repeatStrategyDto)
+                    .build();
+
+            result.add(carePlanDto);
+        }
+        return result;
     }
 
     // update
@@ -92,34 +128,50 @@ public class CarePlanService {
 
     // for Today Page
     public List<TodayDto> getAllTodayByDate(LocalDate date) {
-        return getAllCarePlans().stream().filter(carePlan -> {
-            LocalDate startDate = carePlan.getRepeatStrategyDto().getStartDate();
-            int interval = carePlan.getRepeatStrategyDto().getIntervalValue();
+        List<Object[]> rows = carePlanRepository.findAllTodayByDate(date);
+        List<TodayDto> result = new ArrayList<>();
 
-            return switch (carePlan.getRepeatStrategyDto().getType()) {
-                case DAY -> ChronoUnit.DAYS.between(startDate, date) % interval == 0;
-                case WEEK -> (ChronoUnit.WEEKS.between(startDate, date) % interval == 0)
-                        && carePlan.getRepeatStrategyDto().getRepeatWeek().getDays()
-                        .contains(date.getDayOfWeek().name().substring(0, 3));
-                case MONTH -> (ChronoUnit.MONTHS.between(startDate, date) % interval == 0)
-                        && startDate.getDayOfMonth() == date.getDayOfMonth();
-                case YEAR -> (ChronoUnit.YEARS.between(startDate, date) % interval == 0)
-                        && startDate.getDayOfMonth() == date.getDayOfMonth()
-                        && startDate.getMonth() == date.getMonth();
-            };
-        })
-        .map(carePlan -> {
-            CareLog log = careLogRepository
-                    .findByCarePlan_PlanIdAndRecordDate(carePlan.getPlanId(), date);
+        for (Object[] row : rows) {
+            Long planId = ((Number) row[0]).longValue();
+            String planName = (String) row[1];
+            Long strategyId = ((Number) row[2]).longValue();
+            String typeStr = (String) row[3];
+            int intervalValue = ((Number) row[4]).intValue();
+            LocalDate startDate = ((java.sql.Date) row[5]).toLocalDate();
+            Long repeatWeekId = row[6] != null ? ((Number) row[6]).longValue() : null;
+            Boolean isDone = (Boolean) row[8];
 
-            boolean isDone = log != null && log.getIsDone();
-            return TodayDto.builder()
-                    .planId(carePlan.getPlanId())
-                    .planName(carePlan.getPlanName())
-                    .repeatStrategyDto(carePlan.getRepeatStrategyDto())
-                    .isDoneToday(isDone)
+            RepeatWeekDto repeatWeekDto = null;
+            if (repeatWeekId != null) {
+                String daysConcat = (String) row[7];
+                List<String> days = new ArrayList<>();
+                if (daysConcat != null && !daysConcat.isEmpty()) {
+                    days = Arrays.asList(daysConcat.split(","));
+                }
+
+                repeatWeekDto = RepeatWeekDto.builder()
+                        .repeatWeekId(repeatWeekId)
+                        .days(days)
+                        .build();
+            }
+
+            RepeatStrategyDto repeatStrategyDto = RepeatStrategyDto.builder()
+                    .strategyId(strategyId)
+                    .type(RepeatType.valueOf(typeStr))
+                    .intervalValue(intervalValue)
+                    .startDate(startDate)
+                    .repeatWeek(repeatWeekDto)
                     .build();
-        })
-        .toList();
+
+            TodayDto todayDto = TodayDto.builder()
+                    .planId(planId)
+                    .planName(planName)
+                    .repeatStrategyDto(repeatStrategyDto)
+                    .isDoneToday(isDone != null && isDone)
+                    .build();
+
+            result.add(todayDto);
+        }
+        return result;
     }
 }

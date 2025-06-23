@@ -3,7 +3,6 @@ package kr.ac.kumoh.ce.s20240058.cloudpetbackend.service;
 import jakarta.persistence.EntityNotFoundException;
 import kr.ac.kumoh.ce.s20240058.cloudpetbackend.domain.CareLog;
 import kr.ac.kumoh.ce.s20240058.cloudpetbackend.domain.CarePlan;
-import kr.ac.kumoh.ce.s20240058.cloudpetbackend.dto.CareLogDto;
 import kr.ac.kumoh.ce.s20240058.cloudpetbackend.dto.TodayDto;
 import kr.ac.kumoh.ce.s20240058.cloudpetbackend.repository.CareLogRepository;
 import kr.ac.kumoh.ce.s20240058.cloudpetbackend.repository.CarePlanRepository;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
