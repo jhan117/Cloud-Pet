@@ -1,6 +1,5 @@
 package kr.ac.kumoh.ce.s20240058.cloudpetbackend.controller;
 
-import kr.ac.kumoh.ce.s20240058.cloudpetbackend.domain.CarePlan;
 import kr.ac.kumoh.ce.s20240058.cloudpetbackend.dto.CarePlanDto;
 import kr.ac.kumoh.ce.s20240058.cloudpetbackend.dto.TodayDto;
 import kr.ac.kumoh.ce.s20240058.cloudpetbackend.service.CarePlanService;
